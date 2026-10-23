@@ -1,0 +1,28 @@
+name: Guard tests
+
+# Business-rule guards: frozen files, cart never locked, access/session isolation.
+# These use fixtures only. No database, no secrets, no deploy.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  guards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Type check
+        run: pnpm exec tsc --noEmit
+      - name: Guard tests
+        run: pnpm exec vitest run server/guards client/src/lib/cartNeverLocked.test.ts
