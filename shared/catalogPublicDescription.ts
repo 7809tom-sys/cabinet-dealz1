@@ -34,6 +34,21 @@ const BOOK_OR_IMPORT_PROVENANCE_SUFFIX = /(?:^|\s*[.;,]\s*|\s+)(?:(?:source\s*:\
 const SOURCE_PAGE_SUFFIX = /\s*[;,]?\s*source\s+(?:p(?:age)?\.?|pp\.?)\s*\d+(?:\s*[–-]\s*\d+)?\.?\s*$/i;
 const INTERNAL_PROOF_SUFFIX = /(?:\s*[.;,]\s*|\s+)(?:staged(?:\s+catalog)?|pending\s+(?:designer\s+)?proof|(?:source|designer)\s+proof|exact\s+distributor\s+source\s+configuration)(?:[.;,\s][\s\S]*)?$/i;
 
+/**
+ * "Looks like W1230 in Hickory" is an internal cross-reference note, never customer copy.
+ * Everything from "looks like" to the end of the description is removed.
+ */
+const LOOKS_LIKE_TAIL = /(?:^|\s*[.;,–—|]\s*|\s+)looks?\s+like\b[\s\S]*$/i;
+/**
+ * A supplier or distributor name as the LAST thing in a description ("... , U.S. Cabinet Depot",
+ * "... from AEF") is attribution, not product wording. Only a trailing, separator-introduced name
+ * is removed, so "AltaEuro-compatible pull-out" and a leading "Hardware Resources pull" are untouched.
+ */
+const SUPPLIER_NAME = String.raw`(?:Alta\s*Euro|U\.?S\.?\s*Cabinet\s*Depot|USCD|AEF|Hardware\s+Resources)`;
+const TRAILING_SUPPLIER_NAME = new RegExp(
+  String.raw`\s*(?:[.;,|/–—]|\s-\s|\b(?:from|by|source:?)\s)\s*${SUPPLIER_NAME}(?:\s*[/&]\s*${SUPPLIER_NAME})*\s*\.?\s*$`,
+  "i",
+);
 function tidy(value: string): string {
   return value
     .replace(/\s+/g, " ")
@@ -95,7 +110,9 @@ export function sanitizeCatalogPublicDescription(value: string | null | undefine
       .replace(SUPPLIER_PROVENANCE_SUFFIX, "")
       .replace(BOOK_OR_IMPORT_PROVENANCE_SUFFIX, "")
       .replace(SOURCE_PAGE_SUFFIX, "")
-      .replace(INTERNAL_PROOF_SUFFIX, ""),
+      .replace(INTERNAL_PROOF_SUFFIX, "")
+      .replace(LOOKS_LIKE_TAIL, "")
+      .replace(TRAILING_SUPPLIER_NAME, ""),
   );
 }
 
