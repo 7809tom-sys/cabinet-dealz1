@@ -25,4 +25,4 @@ jobs:
       - name: Type check
         run: pnpm exec tsc --noEmit
       - name: Guard tests
-        run: pnpm exec vitest run server/guards client/src/lib/cartNeverLocked.test.ts
+        run: pnpm exec vitest run server/guards client/src/lib/cartNeverLocked.test.ts client/src/lib/fillerRules.guard.test.ts
