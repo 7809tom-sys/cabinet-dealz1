@@ -1,0 +1,9 @@
+{
+  "_note": "Frozen by Tom: Continuous Wall Builder and the 3D Designer. A hash change needs Tom approval. Update only with: node server/guards/updateFrozenManifest.mjs after approval.",
+  "files": {
+    "client/src/components/design/WallBuilder.tsx": "601cfe9a3986b7ea73bd20113a98961b92e6377d248e4577faba3e173e53984e",
+    "client/src/components/design/WallPicker.tsx": "8970c4f16d4717da416694ebb6f0dd212a798e1cf5e26f00f4e9e99418ad86f1",
+    "client/src/lib/wallBuilderExport.ts": "3c72957627096df087ad0f3c6eb7f78fe97322e2534547ceb21a3ca7d4e3db6d",
+    "client/src/components/design/InteractiveRoom3D.tsx": "0dbc809dc9d50162809e2a1fd619ebc2568085386242040a839961db27a88504"
+  }
+}
