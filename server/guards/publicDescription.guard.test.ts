@@ -67,6 +67,14 @@ describe("Rule 13: customer-facing descriptions carry no supplier or source text
 describe("Rule 13 known gaps (documented, not yet enforced)", () => {
   // These strings still pass through unchanged. They are marked todo so the suite stays green
   // but the gap is visible. Tom decides whether to widen the sanitizer.
-  it.todo('"Looks like W1230 in Hickory" should never reach a customer (not removed by the sanitizer)');
-  it.todo("a bare supplier name with no citation marker (for example a trailing U.S. Cabinet Depot) is left in place");
+  it("removes a 'Looks like ...' cross-reference note", () => {
+    expect(sanitizeCatalogPublicDescription('Wall cabinet 12"W Looks like W1230 in Hickory')).toBe('Wall cabinet 12"W');
+    expect(sanitizeCatalogPublicDescription("Base 3 drawer. Looks like 3DB24")).toBe("Base 3 drawer");
+  });
+  it("removes a trailing bare supplier name but keeps genuine product wording", () => {
+    expect(sanitizeCatalogPublicDescription("3-drawer base. U.S. Cabinet Depot")).toBe("3-drawer base");
+    expect(sanitizeCatalogPublicDescription("Base cabinet from AEF")).toBe("Base cabinet");
+    expect(sanitizeCatalogPublicDescription("Cabinet Depot style corner base")).toBe("Cabinet Depot style corner base");
+    expect(sanitizeCatalogPublicDescription("Tall pantry 18\" with look-alike panel")).toBe("Tall pantry 18\" with look-alike panel");
+  });
 });
